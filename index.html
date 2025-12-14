@@ -1,41 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Audios de Jamal 🎧</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: white;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #00eaff;
-    }
-    .audio-block {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #00eaff44;
-    }
-    audio {
-      width: 100%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>MP3 Jamal – Playlist</title>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        header {
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            background: #1DB954;
+            color: black;
+        }
+        .container {
+            padding: 20px;
+        }
+        .track {
+            padding: 12px;
+            background: #1e1e1e;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .track:hover {
+            background: #2a2a2a;
+        }
+        audio {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
 </head>
+
 <body>
 
-  <h1>🎵 Audios de Jamal 🎵</h1>
+<header>🎧 Playlist de Jamal</header>
 
-  <div class="audio-block">
-    <p>Werenoi – AMG</p>
-    <audio controls src="https://github.com/rayanev1295/project-mp3-jamal/raw/refs/heads/main/Werenoi%20-%20AMG.mp3">
-      Ton navigateur ne supporte pas l'audio HTML5.
-    </audio>
-  </div>
+<div class="container">
+    <h2>Tracks</h2>
+
+    <div id="tracks"></div>
+
+    <audio id="player" controls></audio>
+</div>
+
+<script>
+const base = "https://github.com/rayanev1295/project-mp3-jamal/raw/refs/heads/main/";
+
+const tracks = [
+    "01.mp3",
+    "02.mp3",
+    "03.mp3",
+    "04.mp3",
+    "05.mp3",
+    "06.mp3",
+    "07.mp3",
+    "08.mp3",
+    "09.mp3",
+    "10.mp3",
+    "11.mp3",
+    "12.mp3",
+    "13.mp3",
+    "14.mp3",
+    "15.mp3",
+    "16.mp3",
+    "17.mp3",
+    "18.mp3",
+    "4_5900176301716673820.mp3",
+    "AUDIO-2022-10-20-19-06-25.mp3",
+    "Dosseh & Werenoi - La vie de César (feat. Werenoi).mp3",
+    "Hös Copperfield - PHOTO.mp3",
+    "Millionnaire - Werenoi (320).mp3",
+    "Niaks & Werenoi - Michel Cardon.mp3",
+    "Rimkus & Werenoi & Lacrim & Mac Tyer - Ali (320).mp3",
+    "Werenoi Maes - Selfie(320).mp3",
+    "Werenoi & SCH - Magot (128).mp3",
+    "Werenoi & Sadek - Roulette.mp3",
+    "Werenoi - 10.03.2023.mp3",
+    "Werenoi - 3x filtré (128).mp3",
+    "Werenoi - 4,5L.mp3",
+    "Werenoi - AMG.mp3",
+    "Werenoi - Bang (128).mp3",
+    "Werenoi - CR (128).mp3",
+    "Werenoi - Chaud.mp3",
+    "Werenoi - Commission rogatoire.mp3",
+    "Werenoi - Des fois.mp3",
+    "Werenoi - Fresh Map.mp3",
+    "Werenoi - L'addition V2.mp3",
+    "Werenoi - Laboratoire.mp3",
+    "Werenoi - Les codes (128).mp3",
+    "Werenoi - Mauvaise (128).mp3",
+    "Werenoi - Minimum 20 Kill.mp3",
+    "Werenoi - Ordinateur.mp3",
+    "Werenoi - RS3.mp3",
+    "Werenoi - Rolls Royce (128).mp3",
+    "Werenoi - Roulette (feat. Sadek).mp3",
+    "Werenoi - Selfi.mp3",
+    "Werenoi - Telavive.mp3",
+    "Werenoi - Tu connais (128).mp3",
+    "Werenoi - Téléphone.mp3",
+    "Werenoi - unknown 2.mp3",
+    "Werenoi - unknown.mp3",
+    "Werenoi – 6 Étoiles.mp3",
+    "Werenoi – Guadalajara.mp3",
+    "Werenoi – Rodave.mp3",
+    "the S & Werenoi - Domperignon.mp3"
+];
+
+let container = document.getElementById("tracks");
+let player = document.getElementById("player");
+
+tracks.forEach(name => {
+    let div = document.createElement("div");
+    div.className = "track";
+    div.innerText = name;
+    div.onclick = () => {
+        player.src = base + encodeURIComponent(name);
+        player.play();
+    };
+    container.appendChild(div);
+});
+</script>
 
 </body>
 </html>
