@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion</title>
+</head>
+<body>
+  <h2>Connexion / Inscription</h2>
+
+  <input id="email" placeholder="Email"><br>
+  <input id="password" type="password" placeholder="Mot de passe"><br>
+
+  <button id="login">Connexion</button>
+  <button id="register">Créer un compte</button>
+
+  <script type="module">
+    import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "./firebase.js";
+
+    const email = document.getElementById("email");
+    const pass = document.getElementById("password");
+
+    document.getElementById("login").onclick = () => {
+      signInWithEmailAndPassword(auth, email.value, pass.value)
+      .then(() => window.location.href = "index.html")
+      .catch(err => alert(err.message));
+    };
+
+    document.getElementById("register").onclick = () => {
+      createUserWithEmailAndPassword(auth, email.value, pass.value)
+      .then(() => window.location.href = "index.html")
+      .catch(err => alert(err.message));
+    };
+  </script>
+</body>
+</html>

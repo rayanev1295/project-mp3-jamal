@@ -1,130 +1,239 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>MP3 Jamal – Playlist</title>
-    <style>
-        body {
-            margin: 0;
-            background: #111;
-            font-family: Arial, sans-serif;
-            color: white;
-        }
-        header {
-            padding: 20px;
-            font-size: 28px;
-            font-weight: bold;
-            background: #1DB954;
-            color: black;
-        }
-        .container {
-            padding: 20px;
-        }
-        .track {
-            padding: 12px;
-            background: #1e1e1e;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .track:hover {
-            background: #2a2a2a;
-        }
-        audio {
-            width: 100%;
-            margin-top: 20px;
-        }
-    </style>
-</head>
+<meta charset="UTF-8">
+<title>Jamal MP3 Player</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<style>
+body {
+    margin: 0;
+    background: #0d0d0d;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Layout */
+.container {
+    display: flex;
+    height: calc(100vh - 90px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background: #111;
+    border-right: 1px solid #222;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.music-list {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.music-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #181818;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.music-item:hover {
+    background: #222;
+}
+
+.cover {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    margin-right: 15px;
+}
+
+/* Player */
+.player {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 90px;
+    background: #111;
+    border-top: 1px solid #222;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.player img {
+    width: 70px;
+    height: 70px;
+    border-radius: 6px;
+    margin-right: 15px;
+}
+
+audio { width: 100%; }
+
+/* Mobile */
+@media(max-width:900px){
+    .container {
+        flex-direction: column;
+        height: calc(100vh - 90px);
+    }
+    .sidebar {
+        width: 100%;
+        height: 170px;
+        border-bottom: 1px solid #222;
+    }
+    .music-list {
+        height: calc(100vh - 260px);
+    }
+}
+</style>
+
+</head>
 <body>
 
-<header>🎧 Playlist de Jamal</header>
-
 <div class="container">
-    <h2>Tracks</h2>
+    <div class="sidebar">
+        <h2>Recherche 🔍</h2>
+        <input id="search" type="text" placeholder="Rechercher..."
+               style="width:100%;padding:10px;border-radius:6px;border:none;">
+        <br><br>
 
-    <div id="tracks"></div>
+        <h2>Playlists 🎵</h2>
+        <p style="opacity:0.5;">(en développement)</p>
+    </div>
 
-    <audio id="player" controls></audio>
+    <div class="music-list" id="musicList"></div>
 </div>
 
-<script>
-const base = "https://github.com/rayanev1295/project-mp3-jamal/raw/refs/heads/main/";
+<div class="player">
+    <img id="playerCover" src="https://cdn-images.dzcdn.net/images/artist/c9a941ffdfec123385b9e0b8b20f9ac0/1900x1900-000000-80-0-0.jpg">
+    <div style="flex:1;">
+        <div id="playerTitle">Sélectionne une musique</div>
+        <audio id="audio" controls></audio>
+    </div>
+</div>
 
-const tracks = [
-    "01.mp3",
-    "02.mp3",
-    "03.mp3",
-    "04.mp3",
-    "05.mp3",
-    "06.mp3",
-    "07.mp3",
-    "08.mp3",
-    "09.mp3",
-    "10.mp3",
-    "11.mp3",
-    "12.mp3",
-    "13.mp3",
-    "14.mp3",
-    "15.mp3",
-    "16.mp3",
-    "17.mp3",
-    "18.mp3",
-    "4_5900176301716673820.mp3",
-    "AUDIO-2022-10-20-19-06-25.mp3",
-    "Dosseh & Werenoi - La vie de César (feat. Werenoi).mp3",
-    "Hös Copperfield - PHOTO.mp3",
-    "Millionnaire - Werenoi (320).mp3",
-    "Niaks & Werenoi - Michel Cardon.mp3",
-    "Rimkus & Werenoi & Lacrim & Mac Tyer - Ali (320).mp3",
-    "Werenoi Maes - Selfie(320).mp3",
-    "Werenoi & SCH - Magot (128).mp3",
-    "Werenoi & Sadek - Roulette.mp3",
-    "Werenoi - 10.03.2023.mp3",
-    "Werenoi - 3x filtré (128).mp3",
-    "Werenoi - 4,5L.mp3",
-    "Werenoi - AMG.mp3",
-    "Werenoi - Bang (128).mp3",
-    "Werenoi - CR (128).mp3",
-    "Werenoi - Chaud.mp3",
-    "Werenoi - Commission rogatoire.mp3",
-    "Werenoi - Des fois.mp3",
-    "Werenoi - Fresh Map.mp3",
-    "Werenoi - L'addition V2.mp3",
-    "Werenoi - Laboratoire.mp3",
-    "Werenoi - Les codes (128).mp3",
-    "Werenoi - Mauvaise (128).mp3",
-    "Werenoi - Minimum 20 Kill.mp3",
-    "Werenoi - Ordinateur.mp3",
-    "Werenoi - RS3.mp3",
-    "Werenoi - Rolls Royce (128).mp3",
-    "Werenoi - Roulette (feat. Sadek).mp3",
-    "Werenoi - Selfi.mp3",
-    "Werenoi - Telavive.mp3",
-    "Werenoi - Tu connais (128).mp3",
-    "Werenoi - Téléphone.mp3",
-    "Werenoi - unknown 2.mp3",
-    "Werenoi - unknown.mp3",
-    "Werenoi – 6 Étoiles.mp3",
-    "Werenoi – Guadalajara.mp3",
-    "Werenoi – Rodave.mp3",
-    "the S & Werenoi - Domperignon.mp3"
+<!-- SCRIPT PRINCIPAL -->
+<script>
+const files = [
+"01.mp3","02.mp3","03.mp3","04.mp3","05.mp3","06.mp3","07.mp3","08.mp3","09.mp3","10.mp3",
+"11.mp3","12.mp3","13.mp3","14.mp3","15.mp3","16.mp3","17.mp3","18.mp3",
+"4_5900176301716673820.mp3","AUDIO-2022-10-20-19-06-25.mp3",
+"Dosseh & Werenoi - La vie de César (feat. Werenoi).mp3",
+"Hös Copperfield - PHOTO.mp3",
+"Millionnaire - Werenoi (320).mp3",
+"Niaks & Werenoi - Michel Cardon.mp3",
+"Rimkus & Werenoi & Lacrim & Mac Tyer - Ali (320).mp3",
+"Werenoi Maes - Selfie(320).mp3",
+"Werenoi & SCH - Magot (128).mp3",
+"Werenoi & Sadek - Roulette.mp3",
+"Werenoi - 10.03.2023.mp3",
+"Werenoi - 3x filtré (128).mp3",
+"Werenoi - 4,5L.mp3",
+"Werenoi - AMG.mp3",
+"Werenoi - Bang (128).mp3",
+"Werenoi - CR (128).mp3",
+"Werenoi - Chaud.mp3",
+"Werenoi - Commission rogatoire.mp3",
+"Werenoi - Des fois.mp3",
+"Werenoi - Fresh Map.mp3",
+"Werenoi - L'addition V2.mp3",
+"Werenoi - Laboratoire.mp3",
+"Werenoi - Les codes (128).mp3",
+"Werenoi - Mauvaise (128).mp3",
+"Werenoi - Minimum 20 Kill.mp3",
+"Werenoi - Ordinateur.mp3",
+"Werenoi - RS3.mp3",
+"Werenoi - Rolls Royce (128).mp3",
+"Werenoi - Roulette (feat. Sadek).mp3",
+"Werenoi - Selfi.mp3",
+"Werenoi - Telavive.mp3",
+"Werenoi - Tu connais (128).mp3",
+"Werenoi - Téléphone.mp3",
+"Werenoi - unknown 2.mp3",
+"Werenoi - unknown.mp3",
+"Werenoi – 6 Étoiles.mp3",
+"Werenoi – Guadalajara.mp3",
+"Werenoi – Rodave.mp3",
+"the S & Werenoi - Domperignon.mp3"
 ];
 
-let container = document.getElementById("tracks");
-let player = document.getElementById("player");
+const baseURL = "https://raw.githubusercontent.com/rayanev1295/project-mp3-jamal/main/";
+const cover = "https://cdn-images.dzcdn.net/images/artist/c9a941ffdfec123385b9e0b8b20f9ac0/1900x1900-000000-80-0-0.jpg";
 
-tracks.forEach(name => {
-    let div = document.createElement("div");
-    div.className = "track";
-    div.innerText = name;
-    div.onclick = () => {
-        player.src = base + encodeURIComponent(name);
-        player.play();
-    };
-    container.appendChild(div);
+function loadSongs() {
+    const list = document.getElementById("musicList");
+    list.innerHTML = "";
+    files.forEach(name => {
+        const div = document.createElement("div");
+        div.className = "music-item";
+        div.innerHTML = `
+            <img class="cover" src="${cover}">
+            <div class="music-title">${name}</div>
+        `;
+        div.onclick = () => playSong(name);
+        list.appendChild(div);
+    });
+}
+loadSongs();
+
+function playSong(name) {
+    const audio = document.getElementById("audio");
+    const fullURL = baseURL + encodeURIComponent(name);
+    document.getElementById("playerTitle").textContent = name;
+    document.getElementById("playerCover").src = cover;
+    audio.src = fullURL;
+    audio.play();
+}
+
+document.getElementById("search").addEventListener("input", function() {
+    const value = this.value.toLowerCase();
+    const items = document.querySelectorAll(".music-item");
+    items.forEach(item => {
+        const title = item.innerText.toLowerCase();
+        item.style.display = title.includes(value) ? "" : "none";
+    });
 });
+</script>
+
+<!-- FIREBASE AUTH (MODULE) -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider }
+    from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyByv8z7ZFPqxVcArVLiVYFl7oD0EgS-bSw",
+  authDomain: "jamal-mp3.firebaseapp.com",
+  projectId: "jamal-mp3",
+  storageBucket: "jamal-mp3.firebasestorage.app",
+  messagingSenderId: "863019094336",
+  appId: "1:863019094336:web:b6fc5308ef34bbb2b2aaa5",
+  measurementId: "G-SDLXK2J35S"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) login();
+});
+
+function login() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+        .then(() => alert("Connexion réussie !"))
+        .catch(() => alert("Échec de connexion"));
+}
 </script>
 
 </body>
