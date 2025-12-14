@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<<<<<<< HEAD
 <title>Jamal MP3 Player</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -201,6 +202,238 @@ document.getElementById("search").addEventListener("input", function() {
         item.style.display = title.includes(value) ? "" : "none";
     });
 });
+=======
+<title>MP3 JAMAL - Mini Spotify</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0f0f0f;
+        color: white;
+        display: flex;
+        height: 100vh;
+    }
+
+    /* Sidebar */
+    #sidebar {
+        width: 220px;
+        background: #000;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #sidebar h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #1db954;
+    }
+
+    #sidebar button {
+        background: none;
+        border: none;
+        color: white;
+        padding: 10px 0;
+        text-align: left;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    /* Main content */
+    #main {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    #search {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        font-size: 16px;
+    }
+
+    /* Song list */
+    .song {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 5px;
+        background: #181818;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .song img {
+        width: 55px;
+        height: 55px;
+        border-radius: 4px;
+        margin-right: 15px;
+    }
+
+    .song:hover {
+        background: #282828;
+    }
+
+    /* Player */
+    #player {
+        position: fixed;
+        bottom: 0;
+        left: 220px;
+        right: 0;
+        height: 90px;
+        background: #181818;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-top: 1px solid #333;
+    }
+
+    #controls button {
+        background: none;
+        border: none;
+        color: white;
+        margin: 0 10px;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    #progress {
+        flex: 1;
+        height: 5px;
+        background: #333;
+        margin: 0 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #bar {
+        height: 100%;
+        width: 0%;
+        background: #1db954;
+    }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div id="sidebar">
+    <h2>Jamal Music</h2>
+    <button onclick="showAll()">🎵 Tous les titres</button>
+    <button onclick="showFavs()">⭐ Favoris</button>
+    <button onclick="showPlaylists()">📂 Playlists</button>
+</div>
+
+<!-- Main -->
+<div id="main">
+    <input id="search" placeholder="Recherche...">
+    <div id="songs"></div>
+</div>
+
+<!-- Player -->
+<div id="player">
+    <div id="controls">
+        <button onclick="prev()">⏮</button>
+        <button onclick="togglePlay()">⏯</button>
+        <button onclick="next()">⏭</button>
+        <button onclick="shuffle()">🔀</button>
+    </div>
+
+    <div id="progress" onclick="seek(event)">
+        <div id="bar"></div>
+    </div>
+
+    <audio id="audio"></audio>
+</div>
+
+<script>
+/* ---------- CONFIG ---------- */
+const BASE = "https://github.com/rayanev1295/project-mp3-jamal/raw/refs/heads/main/";
+const COVER = "https://cdn-images.dzcdn.net/images/artist/c9a941ffdfec123385b9e0b8b20f9ac0/1900x1900-000000-80-0-0.jpg";
+
+/* Liste des musiques */
+const songs = [
+"01.mp3","02.mp3","03.mp3","04.mp3","05.mp3","06.mp3","07.mp3","08.mp3","09.mp3","10.mp3","11.mp3","12.mp3","13.mp3","14.mp3",
+"15.mp3","16.mp3","17.mp3","18.mp3","4_5900176301716673820.mp3","AUDIO-2022-10-20-19-06-25.mp3",
+"Dosseh & Werenoi - La vie de César (feat. Werenoi).mp3","Hös Copperfield - PHOTO.mp3","Millionnaire - Werenoi (320).mp3",
+"Niaks & Werenoi - Michel Cardon.mp3","Rimkus & Werenoi & Lacrim & Mac Tyer - Ali (320).mp3",
+"Werenoi Maes - Selfie(320).mp3","Werenoi & SCH - Magot (128).mp3","Werenoi & Sadek - Roulette.mp3","Werenoi - 10.03.2023.mp3",
+"Werenoi - 3x filtré (128).mp3","Werenoi - 4,5L.mp3","Werenoi - AMG.mp3","Werenoi - Bang (128).mp3","Werenoi - CR (128).mp3",
+"Werenoi - Chaud.mp3","Werenoi - Commission rogatoire.mp3","Werenoi - Des fois.mp3","Werenoi - Fresh Map.mp3",
+"Werenoi - L'addition V2.mp3","Werenoi - Laboratoire.mp3","Werenoi - Les codes (128).mp3","Werenoi - Mauvaise (128).mp3",
+"Werenoi - Minimum 20 Kill.mp3","Werenoi - Ordinateur.mp3","Werenoi - RS3.mp3","Werenoi - Rolls Royce (128).mp3",
+"Werenoi - Roulette (feat. Sadek).mp3","Werenoi - Selfi.mp3","Werenoi - Telavive.mp3","Werenoi - Tu connais (128).mp3",
+"Werenoi - Téléphone.mp3","Werenoi - unknown 2.mp3","Werenoi - unknown.mp3","Werenoi – 6 Étoiles.mp3",
+"Werenoi – Guadalajara.mp3","Werenoi – Rodave.mp3","the S & Werenoi - Domperignon.mp3"
+];
+
+/* ---------- Affichage ---------- */
+function loadSongs(list) {
+    let html = "";
+    list.forEach((f, i) => {
+        html += `
+        <div class="song" onclick="playSong(${i})">
+            <img src="${COVER}">
+            <div>${f}</div>
+        </div>`;
+    });
+    document.getElementById("songs").innerHTML = html;
+}
+
+loadSongs(songs);
+
+/* ---------- Player ---------- */
+let index = 0;
+let audio = document.getElementById("audio");
+
+function playSong(i) {
+    index = i;
+    audio.src = BASE + encodeURIComponent(songs[i]);
+    audio.play();
+}
+
+function togglePlay() {
+    audio.paused ? audio.play() : audio.pause();
+}
+
+function next() {
+    index = (index + 1) % songs.length;
+    playSong(index);
+}
+
+function prev() {
+    index = (index - 1 + songs.length) % songs.length;
+    playSong(index);
+}
+
+function shuffle() {
+    index = Math.floor(Math.random() * songs.length);
+    playSong(index);
+}
+
+/* Auto-next */
+audio.onended = next;
+
+/* Progress bar */
+audio.ontimeupdate = () => {
+    let p = (audio.currentTime / audio.duration) * 100;
+    document.getElementById("bar").style.width = p + "%";
+};
+
+function seek(e) {
+    let rect = e.target.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    audio.currentTime = (x / rect.width) * audio.duration;
+}
+
+/* Recherche */
+document.getElementById("search").oninput = e => {
+    let t = e.target.value.toLowerCase();
+    loadSongs(songs.filter(s => s.toLowerCase().includes(t)));
+};
+>>>>>>> c63673c799a65719e3aaa7db365cfc76ee0a6172
 </script>
 
 <!-- FIREBASE AUTH (MODULE) -->
